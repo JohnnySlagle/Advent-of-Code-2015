@@ -17,7 +17,7 @@ let h = 2
 
 
 class Day2: Day {
-    func part1() -> Any {
+    override func part1() -> Any {
         var paperSqFt = 0
         if let presents = input()?.componentsSeparatedByCharactersInSet(.newlineCharacterSet()) {
             for present in presents {
@@ -29,7 +29,7 @@ class Day2: Day {
         return paperSqFt
     }
     
-    func part2() -> Any {
+    override func part2() -> Any {
         var ribbonFt = 0
         if let presents = input()?.componentsSeparatedByCharactersInSet(.newlineCharacterSet()) {
             for present in presents {
@@ -45,10 +45,6 @@ class Day2: Day {
             }
         }
         return ribbonFt
-    }
-    
-    func input() -> String? {
-        return try? String(contentsOfFile: "/Users/Johnny/Desktop/AdventOfCode/AdventOfCode/Day2-Input")
     }
     
     func parseSides(dimensions: String) -> [Int]? {

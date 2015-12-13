@@ -8,18 +8,18 @@
 
 import Foundation
 
-protocol Day {
-//    required init() {}
-    
-    func part1() -> Any
-//    {
-//        print("Override me")
-//        return 0
-//    }
+class Day {    
+    func part1() -> Any {
+        print("Override me")
+        return 0
+    }
 
-    func part2() -> Any
-//    {
-//        print("Override me")
-//        return 0
-//    }
+    func part2() -> Any {
+        print("Override me")
+        return 0
+    }
+    
+    func input() -> String? {
+        return try? String(contentsOfFile: "/Users/Johnny/Desktop/AdventOfCode/AdventOfCode/\(self.dynamicType)-Input")
+    }
 }

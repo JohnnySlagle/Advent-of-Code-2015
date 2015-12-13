@@ -10,12 +10,12 @@ import Foundation
 
 print(">>>>>>>>>> Advent of Code <<<<<<<<<<")
 
-let days = [Day1.init(), Day2.init()]
+let days = [Day1.init(), Day2.init(), Day3.init()]
 var counter = 1
 for day in days {
     print("Day \(counter++) –")
-    print("\t Part 1: \((day as? Day)!.part1())")
-    print("\t Part 2: \((day as? Day)!.part2())")
+    print("\t Part 1: \(day.part1())")
+    print("\t Part 2: \(day.part2())")
 }
 
 
