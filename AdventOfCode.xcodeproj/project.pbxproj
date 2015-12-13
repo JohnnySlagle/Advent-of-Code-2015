@@ -35,6 +35,7 @@
 		B20C01171C1D8FB70056BA7B /* Day1-Input */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "Day1-Input"; sourceTree = "<group>"; };
 		B20C01181C1D8FB70056BA7B /* Day2-Input */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "Day2-Input"; sourceTree = "<group>"; };
 		B20C01191C1D8FC80056BA7B /* Day1.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Day1.swift; sourceTree = "<group>"; };
+		B20C011B1C1D99480056BA7B /* Day3-Input */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "Day3-Input"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -82,6 +83,7 @@
 			children = (
 				B20C01171C1D8FB70056BA7B /* Day1-Input */,
 				B20C01181C1D8FB70056BA7B /* Day2-Input */,
+				B20C011B1C1D99480056BA7B /* Day3-Input */,
 			);
 			name = Inputs;
 			sourceTree = "<group>";
