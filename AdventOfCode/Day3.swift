@@ -10,40 +10,40 @@ import Foundation
 
 // MARK:- Custom Operators
 prefix operator ↑ {}
-prefix func ↑(inout house: House) -> House {
+prefix func ↑(inout house: Santa) -> Santa {
     house.y += 1
     return house
 //    return House(x: house.x, y: house.y + 1)
 }
 
 prefix operator ↓ {}
-prefix func ↓(inout house: House) -> House {
+prefix func ↓(inout house: Santa) -> Santa {
     house.y -= 1
     return house
 //    return House(x: house.x, y: house.y - 1)
 }
 
 prefix operator ← {}
-prefix func ←(inout house: House) -> House {
+prefix func ←(inout house: Santa) -> Santa {
     house.x -= 1
     return house
 //    return House(x: house.x - 1, y: house.y)
 }
 
 prefix operator → {}
-prefix func →(inout house: House) -> House {
+prefix func →(inout house: Santa) -> Santa {
     house.x += 1
     return house
 //    return House(x: house.x + 1, y: house.y)
 }
 
 // MARK:- Equatable
-func ==(left: House, right: House) -> Bool {
+func ==(left: Santa, right: Santa) -> Bool {
     return (left.x == right.x) && (left.y == right.y)
 }
 
 // Note: I am using NSObject to override now NSCountedSet equates and compares this class
-class House: NSObject { // Equatable, Hashable {
+class Santa: NSObject { // Equatable, Hashable {
     var x: Int = 0
     var y: Int = 0
     
@@ -68,7 +68,7 @@ class House: NSObject { // Equatable, Hashable {
     }
     
     override func copy() -> AnyObject {
-        return House(x: x, y: y)
+        return Santa(x: x, y: y)
     }
 }
 
@@ -77,15 +77,14 @@ class Day3: Day {
     
     var visited: [String: Int] = [:]
     
-    func visit(house: House) {
+    func visit(house: Santa) {
         visited[house.key()] = ((visited[house.key()] ?? 0) + 1)
     }
     
     override func part1() -> Any {
-        
         // Note: I don't like how I solved this, at all. I want something cleaner and more swifty
         let instructions = input()!
-        var santa = House()
+        var santa = Santa()
         
         visit(santa)
         for c in instructions.characters {
@@ -110,6 +109,29 @@ class Day3: Day {
     }
     
     override func part2() -> Any {
-        return ""
+        // Note: I don't like how I solved this, at all. I want something cleaner and more swifty
+        let instructions = input()!
+        var santa = Santa()
+        
+        visit(santa)
+        for c in instructions.characters {
+            // Move
+            switch c {
+            case "^":
+                ↑santa
+            case "v":
+                ↓santa
+            case "<":
+                ←santa
+            case ">":
+                →santa
+            default:
+                break
+            }
+            visit(santa)
+        }
+        
+        // Count homes > 1 present
+        return visited.filter { $1 >= 1 }.count
     }
 }
