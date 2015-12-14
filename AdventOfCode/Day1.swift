@@ -35,6 +35,7 @@ class Day1: Day {
     }
     
     override func part1() -> Any {
+        // Note: Another quick way is to just count up the number of ( and subtract them by the number of )
         return notLisp(input()!).floor
     }
     

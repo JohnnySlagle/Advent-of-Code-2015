@@ -8,23 +8,33 @@
 
 import Foundation
 
-// Note: I am using NSObject to override now NSCountedSet equates and compares this class
-class House: NSObject { // Equatable, Hashable {
-    var x: Int = 0
-    var y: Int = 0
-    
-    override var hashValue: Int {
-        return x ^ y
-    }
-    
-    override func isEqual(object: AnyObject?) -> Bool {
-        // for isEqual:
-        if let house = object as? House {
-            return house == self // just use our "==" function
-        } else {
-            return false
-        }
-    }
+// MARK:- Custom Operators
+prefix operator ↑ {}
+prefix func ↑(inout house: House) -> House {
+    house.y += 1
+    return house
+//    return House(x: house.x, y: house.y + 1)
+}
+
+prefix operator ↓ {}
+prefix func ↓(inout house: House) -> House {
+    house.y -= 1
+    return house
+//    return House(x: house.x, y: house.y - 1)
+}
+
+prefix operator ← {}
+prefix func ←(inout house: House) -> House {
+    house.x -= 1
+    return house
+//    return House(x: house.x - 1, y: house.y)
+}
+
+prefix operator → {}
+prefix func →(inout house: House) -> House {
+    house.x += 1
+    return house
+//    return House(x: house.x + 1, y: house.y)
 }
 
 // MARK:- Equatable
@@ -32,36 +42,71 @@ func ==(left: House, right: House) -> Bool {
     return (left.x == right.x) && (left.y == right.y)
 }
 
+// Note: I am using NSObject to override now NSCountedSet equates and compares this class
+class House: NSObject { // Equatable, Hashable {
+    var x: Int = 0
+    var y: Int = 0
+    
+    init(x: Int = 0, y: Int = 0) {
+        self.x = x
+        self.y = y
+    }
+    
+    override var hashValue: Int {
+        return "(\(x), \(y))".hashValue
+    }
+    
+    override var description: String {
+        get {
+            return "(\(x), \(y))"
+        }
+    }
+    
+    // Note: I am using this as the "key" because...I COULD NOT FIGURE OUT HOW TO MAKE MY CUSTOM CLASS EQUATABLE/HASHABLE. WTF
+    func key() -> String {
+        return "(\(x), \(y))"
+    }
+    
+    override func copy() -> AnyObject {
+        return House(x: x, y: y)
+    }
+}
+
 
 class Day3: Day {
+    
+    var visited: [String: Int] = [:]
+    
+    func visit(house: House) {
+        visited[house.key()] = ((visited[house.key()] ?? 0) + 1)
+    }
+    
     override func part1() -> Any {
+        
+        // Note: I don't like how I solved this, at all. I want something cleaner and more swifty
         let instructions = input()!
-        let countable = NSCountedSet()
-//        countable.addObject(House())
-//        countable.addObject(House())
-//        countable.addObject(House())
-//        print(countable.countForObject(House()))
+        var santa = House()
         
-        var x = 0, y = 0
-        
+        visit(santa)
         for c in instructions.characters {
+            // Move
             switch c {
             case "^":
-                y++
+                ↑santa
             case "v":
-                y--
+                ↓santa
             case "<":
-                x--
+                ←santa
             case ">":
-                x++
+                →santa
             default:
                 break
             }
+            visit(santa)
         }
-        
-        // right here needing to finish the rest of the problem. I need to actually keep track of the presents next
-        
-        return ""
+
+        // Count homes > 1 present
+        return visited.filter { $1 >= 1 }.count
     }
     
     override func part2() -> Any {

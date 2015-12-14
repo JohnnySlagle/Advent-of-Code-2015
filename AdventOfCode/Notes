@@ -1,0 +1,4 @@
+Re: Day 3
+
+I could not figure out how to use my custom class as a key in a dictionary OR unique object in an NSCountedSet. I seriously have no idea what I was doing wrong. I implemented both Equatable, Hashable, and overloaded == operator. Really frustrating.
+

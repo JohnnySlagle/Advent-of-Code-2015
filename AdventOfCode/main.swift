@@ -10,7 +10,7 @@ import Foundation
 
 print(">>>>>>>>>> Advent of Code <<<<<<<<<<")
 
-let days = [Day1.init(), Day2.init(), Day3.init()]
+let days = [Day3.init()]//[Day1.init(), Day2.init(), Day3.init()]
 var counter = 1
 for day in days {
     print("Day \(counter++) –")
