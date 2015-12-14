@@ -66,6 +66,24 @@ class Santa: NSObject { // Equatable, Hashable {
     func key() -> String {
         return "(\(x), \(y))"
     }
+
+    // I'd like to learn why this isn't working
+    func move(c: Character) {
+        // http://stackoverflow.com/a/25103938/870028 "You can only pass a variable as the argument for an in-out parameter."
+        var tempSanta = self
+        switch c {
+        case "^":
+            ↑tempSanta
+        case "v":
+            ↓tempSanta
+        case "<":
+            ←tempSanta
+        case ">":
+            →tempSanta
+        default:
+            break
+        }
+    }
     
     override func copy() -> AnyObject {
         return Santa(x: x, y: y)
@@ -82,25 +100,15 @@ class Day3: Day {
     }
     
     override func part1() -> Any {
+        visited = [:]
+        
         // Note: I don't like how I solved this, at all. I want something cleaner and more swifty
         let instructions = input()!
-        var santa = Santa()
+        let santa = Santa()
         
         visit(santa)
         for c in instructions.characters {
-            // Move
-            switch c {
-            case "^":
-                ↑santa
-            case "v":
-                ↓santa
-            case "<":
-                ←santa
-            case ">":
-                →santa
-            default:
-                break
-            }
+            santa.move(c)
             visit(santa)
         }
 
@@ -108,27 +116,23 @@ class Day3: Day {
         return visited.filter { $1 >= 1 }.count
     }
     
+    
     override func part2() -> Any {
-        // Note: I don't like how I solved this, at all. I want something cleaner and more swifty
+        visited = [:]
+        
         let instructions = input()!
-        var santa = Santa()
+        let santa = Santa(), robo_santa = Santa()
+        var santasTurn = true
         
         visit(santa)
+        visit(robo_santa)
         for c in instructions.characters {
-            // Move
-            switch c {
-            case "^":
-                ↑santa
-            case "v":
-                ↓santa
-            case "<":
-                ←santa
-            case ">":
-                →santa
-            default:
-                break
-            }
-            visit(santa)
+            let realSanta = santasTurn ? santa : robo_santa
+
+            realSanta.move(c)
+            visit(realSanta)
+            
+            santasTurn = !santasTurn
         }
         
         // Count homes > 1 present

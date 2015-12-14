@@ -32,11 +32,8 @@
 		B20C010E1C1D826B0056BA7B /* Day3.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Day3.swift; sourceTree = "<group>"; };
 		B20C01101C1D82E70056BA7B /* Day2.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Day2.swift; sourceTree = "<group>"; };
 		B20C01141C1D847F0056BA7B /* Day.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Day.swift; sourceTree = "<group>"; };
-		B20C01171C1D8FB70056BA7B /* Day1-Input */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "Day1-Input"; sourceTree = "<group>"; };
-		B20C01181C1D8FB70056BA7B /* Day2-Input */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "Day2-Input"; sourceTree = "<group>"; };
 		B20C01191C1D8FC80056BA7B /* Day1.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Day1.swift; sourceTree = "<group>"; };
-		B20C011B1C1D99480056BA7B /* Day3-Input */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "Day3-Input"; sourceTree = "<group>"; };
-		B26FB3371C1EC31400821CA6 /* Notes */ = {isa = PBXFileReference; lastKnownFileType = text; path = Notes; sourceTree = "<group>"; };
+		B26FB33D1C1ECD3900821CA6 /* Inputs */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Inputs; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -74,20 +71,9 @@
 				B20C01191C1D8FC80056BA7B /* Day1.swift */,
 				B20C01101C1D82E70056BA7B /* Day2.swift */,
 				B20C010E1C1D826B0056BA7B /* Day3.swift */,
-				B26FB3371C1EC31400821CA6 /* Notes */,
-				B20C01161C1D8CAB0056BA7B /* Inputs */,
+				B26FB33D1C1ECD3900821CA6 /* Inputs */,
 			);
 			path = AdventOfCode;
-			sourceTree = "<group>";
-		};
-		B20C01161C1D8CAB0056BA7B /* Inputs */ = {
-			isa = PBXGroup;
-			children = (
-				B20C01171C1D8FB70056BA7B /* Day1-Input */,
-				B20C01181C1D8FB70056BA7B /* Day2-Input */,
-				B20C011B1C1D99480056BA7B /* Day3-Input */,
-			);
-			name = Inputs;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
