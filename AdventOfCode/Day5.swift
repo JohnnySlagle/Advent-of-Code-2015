@@ -17,31 +17,37 @@ class Day5: Day {
             let word_range = NSMakeRange(0, word.characters.count)
             
             // Check naughty words
-            let naughty_regex = try! NSRegularExpression(pattern: "(ab|cd|pq|xy){1,}", options: NSRegularExpressionOptions())
-            let naughty = naughty_regex.matchesInString(word, options: .ReportCompletion, range: word_range)
-            guard naughty.count == 0 else {
+//            let naughty_regex = try! NSRegularExpression(pattern: "(ab|cd|pq|xy){1,}", options: NSRegularExpressionOptions())
+//            let naughty = naughty_regex.matchesInString(word, options: .ReportCompletion, range: word_range)
+//            guard naughty.count == 0 else {
+//                return false
+//            }
+            
+            guard word.matches("(ab|cd|pq|xy){1,}") == 0 else {
                 return false
             }
             
             // At least 3 vowels
-            let vowel_regex = try! NSRegularExpression(pattern: "[aeiou]", options: NSRegularExpressionOptions())
-            let vowels = vowel_regex.matchesInString(word, options: .ReportCompletion, range: word_range)
-            guard vowels.count >= 3 else {
+//            let vowel_regex = try! NSRegularExpression(pattern: "[aeiou]", options: NSRegularExpressionOptions())
+//            let vowels = vowel_regex.matchesInString(word, options: .ReportCompletion, range: word_range)
+//            guard vowels.count >= 3 else {
+//                return false
+//            }
+            
+            guard word.matches("[aeiou]") >= 3 else {
                 return false
             }
             
             // At least a double letter
-            let double_regex = try! NSRegularExpression(pattern: "([a-z])\\1", options: NSRegularExpressionOptions())
-            let doubles = double_regex.matchesInString(word, options: .ReportCompletion, range: word_range)
-            guard doubles.count >= 1 else {
+//            let double_regex = try! NSRegularExpression(pattern: "([a-z])\\1", options: NSRegularExpressionOptions())
+//            let doubles = double_regex.matchesInString(word, options: .ReportCompletion, range: word_range)
+//            guard doubles.count >= 1 else {
+//                return false
+//            }
+            
+            guard word.matches("([a-z])\\1") >= 1 else {
                 return false
             }
-//            var double_word = false
-//            for char in word.characters {
-//                if word.containsString("\(char)\(char)") {
-//                    double_word = true
-//                }
-//            }
             
             return true
         }.count
@@ -68,10 +74,10 @@ class Day5: Day {
 }
 
 extension String {
-    func matches(pattern: String, count: Int = 1) -> Bool {
+    func matches(pattern: String) -> Int {
         if let regex = try? NSRegularExpression(pattern: pattern, options: NSRegularExpressionOptions()) {
-            return (regex.matchesInString(self, options: .ReportCompletion, range: NSMakeRange(0, self.characters.count)).count >= count)
+            return regex.matchesInString(self, options: .ReportCompletion, range: NSMakeRange(0, self.characters.count)).count
         }
-        return false
+        return 0
     }
 }
