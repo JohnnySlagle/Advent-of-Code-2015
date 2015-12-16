@@ -8,16 +8,13 @@
 
 import Foundation
 
-print(">>>>>>>>>> Advent of Code <<<<<<<<<<")
+print(">>>>>>>>>>>> Advent of Code <<<<<<<<<<<<<")
 
-let days = [Day3.init()]//[Day1.init(), Day2.init(), Day3.init()]
-var counter = 1
+let days = [Day5.init()]
 for day in days {
-    print("Day \(counter++) –")
+    print("\(day.self) –") // counter++
     print("\t Part 1: \(day.part1())")
     print("\t Part 2: \(day.part2())")
 }
 
-
-
-// >@>o>o>0<<<0>>o<<<o<0<<@>@>*<o<<<*<<o>>o<
+print(">@>o>o>0<<<0>>o<<<o<0<<@>@>*<o<<<*<<o>>o<")

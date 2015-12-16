@@ -20,6 +20,6 @@ class Day {
     }
     
     func input() -> String? {
-        return try? String(contentsOfFile: "/Users/Johnny/Desktop/AdventOfCode/AdventOfCode/\(self.dynamicType)-Input")
+        return try? String(contentsOfFile: "/Users/Johnny/Desktop/AdventOfCode/AdventOfCode/Inputs/\(self.dynamicType)-Input")
     }
 }
