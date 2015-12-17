@@ -13,6 +13,7 @@
 		B20C01151C1D847F0056BA7B /* Day.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20C01141C1D847F0056BA7B /* Day.swift */; };
 		B20C011A1C1D8FC80056BA7B /* Day1.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20C01191C1D8FC80056BA7B /* Day1.swift */; };
 		B26FB33F1C1ECE8B00821CA6 /* Day5.swift in Sources */ = {isa = PBXBuildFile; fileRef = B26FB33E1C1ECE8B00821CA6 /* Day5.swift */; };
+		B2BA29171C2159C0000357DA /* Day6.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2BA29161C2159C0000357DA /* Day6.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -36,6 +37,7 @@
 		B20C01191C1D8FC80056BA7B /* Day1.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Day1.swift; sourceTree = "<group>"; };
 		B26FB33D1C1ECD3900821CA6 /* Inputs */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Inputs; sourceTree = "<group>"; };
 		B26FB33E1C1ECE8B00821CA6 /* Day5.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Day5.swift; sourceTree = "<group>"; };
+		B2BA29161C2159C0000357DA /* Day6.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Day6.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -74,6 +76,7 @@
 				B20C01101C1D82E70056BA7B /* Day2.swift */,
 				B20C010E1C1D826B0056BA7B /* Day3.swift */,
 				B26FB33E1C1ECE8B00821CA6 /* Day5.swift */,
+				B2BA29161C2159C0000357DA /* Day6.swift */,
 				B26FB33D1C1ECD3900821CA6 /* Inputs */,
 			);
 			path = AdventOfCode;
@@ -141,6 +144,7 @@
 				B20C011A1C1D8FC80056BA7B /* Day1.swift in Sources */,
 				B20C01111C1D82E70056BA7B /* Day2.swift in Sources */,
 				B20C01151C1D847F0056BA7B /* Day.swift in Sources */,
+				B2BA29171C2159C0000357DA /* Day6.swift in Sources */,
 				B20C01081C1D6F120056BA7B /* main.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

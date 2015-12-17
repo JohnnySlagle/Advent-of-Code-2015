@@ -10,13 +10,11 @@ import Foundation
 
 class Day {    
     func part1() -> Any {
-        print("Override me")
-        return 0
+        return "Override me"
     }
 
     func part2() -> Any {
-        print("Override me")
-        return 0
+        return "Override me"
     }
     
     func input() -> String? {
