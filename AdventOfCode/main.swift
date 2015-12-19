@@ -10,7 +10,7 @@ import Foundation
 
 print(">>>>>>>>>>>> Advent of Code <<<<<<<<<<<<<")
 
-let days = [Day6.init()]
+let days = [Day7.init()]
 for day in days {
     print("\(day.self) –") // counter++
     print("\t Part 1: \(day.part1())")
