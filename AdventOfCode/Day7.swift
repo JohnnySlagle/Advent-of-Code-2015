@@ -8,6 +8,18 @@
 
 import Foundation
 
+enum Gate: String {
+    case NOT
+    case AND
+    case OR
+    case LSHIFT
+    case RSHIFT
+}
+
+enum Direction: String {
+    case Connection = "->"
+}
+
 class Parser {
     var currentToken: String?
     var tokens: [String] = []
@@ -41,7 +53,6 @@ class Wire: Parser, CustomStringConvertible {
     var second_identifier: String?
     var gate: Gate?
     var destination: String?
-    var expression: String?
     
     var first_value: UInt16?
     var second_value: UInt16?
@@ -56,7 +67,6 @@ class Wire: Parser, CustomStringConvertible {
     convenience init(expression: String) {
         self.init()
         
-        self.expression = expression
         parseTokens(expression)
         token = nextToken()
         
@@ -73,11 +83,8 @@ class Wire: Parser, CustomStringConvertible {
                 matchDirection()
                 destination = nextToken()
                 
-                //                print("\(token) \(identifier) -> \(destination)")
-                
                 if let id = first_identifier, signal = UInt16(id) {
                     self.signal = ~signal
-                    //                    print("\(wires[destination])")
                 }
             } else if tryMatchGate() {
                 // 2: identifier_1/number GATE identifier_2/number -> identifier_3
@@ -87,19 +94,15 @@ class Wire: Parser, CustomStringConvertible {
                 matchDirection()
                 destination = nextToken()
                 
-                //                print("\(token) \(gate) \(identifier_2) -> \(destination)")
-                
                 if let signal = logic() {
                     self.signal = signal
                 }
-            } else {// if let number = Int16(token) {
+            } else {
                 // 1: number -> identifier
                 matchDirection()
-                first_identifier = token// nextToken() // Do I need this?
-                destination = nextToken()//first_identifier
+                first_identifier = token // Do I even need this?
+                destination = nextToken()
                 signal = signal(token)
-                
-                //                print("\(token) -> \(identifier)")
             }
         }
     }
@@ -177,18 +180,6 @@ class Wire: Parser, CustomStringConvertible {
     }
 }
 
-enum Gate: String {
-    case NOT
-    case AND
-    case OR
-    case LSHIFT
-    case RSHIFT
-}
-
-enum Direction: String {
-    case Connection = "->"
-}
-
 class Day7: Day {
     
     var wires: [String: UInt16] = [:]
@@ -197,10 +188,12 @@ class Day7: Day {
     override func part1() -> Any {
         let instructions = input()?.componentsSeparatedByCharactersInSet(.newlineCharacterSet()) ?? []
         
+        // Parse each line
         for instruction in instructions {
             parse(instruction)
         }
         
+        // Evaluate each argument
         for i in incomplete.keys {
             if let signal = evaluate(i) {
                 wires[i] = signal
@@ -259,19 +252,5 @@ class Day7: Day {
         if let destination = wire.destination {
             incomplete[destination] = wire
         }
-    }
-
-    
-    func signal(identifier: String) -> UInt16? {
-        if let signal = UInt16(identifier) {
-            return signal
-        }  else if let signal = wires[identifier] {
-            return UInt16(signal)
-        }
-        return nil
-    }
-    
-    func hasSignal(identifier: String) -> Bool {
-        return (wires[identifier] != nil)
     }
 }
