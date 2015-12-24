@@ -27,16 +27,81 @@ class Parser {
     func tryMatchGate() -> Bool {
         return (Gate(rawValue: tokens.first ?? "") != nil)
     }
+    
+    func matchDirection() {
+        guard nextToken() == Direction.Connection.rawValue else {
+            print("Error: Could not match direction.")
+            return
+        }
+    }
 }
 
-class Wire: Parser {
+class Wire: Parser, CustomStringConvertible {
     var first_identifier: String?
     var second_identifier: String?
     var gate: Gate?
-//    var signal: UInt16?
+    var destination: String?
+    var expression: String?
+    
+    var first_value: UInt16?
+    var second_value: UInt16?
+    var signal: UInt16?
+    
+    var description: String {
+        get {
+            return "\(first_identifier) \(gate) \(second_identifier) -> \(destination) == \(signal)"
+        }
+    }
     
     convenience init(expression: String) {
         self.init()
+        
+        self.expression = expression
+        parseTokens(expression)
+        token = nextToken()
+        
+        // Instruction Types
+        // 1: number -> identifier
+        // 2: identifier_1/number GATE identifier_2/number -> identifier_3
+        // 3: NOT identifier_1 -> identifier_2
+        
+        if let token = token {
+            if Gate(rawValue: token) == .NOT {
+                // 3: NOT identifier_1 -> identifier_2
+                self.gate = .NOT
+                first_identifier = nextToken()
+                matchDirection()
+                destination = nextToken()
+                
+                //                print("\(token) \(identifier) -> \(destination)")
+                
+                if let id = first_identifier, signal = UInt16(id) {
+                    self.signal = ~signal
+                    //                    print("\(wires[destination])")
+                }
+            } else if tryMatchGate() {
+                // 2: identifier_1/number GATE identifier_2/number -> identifier_3
+                first_identifier = token
+                gate = Gate(rawValue: nextToken())!
+                second_identifier = nextToken()
+                matchDirection()
+                destination = nextToken()
+                
+                //                print("\(token) \(gate) \(identifier_2) -> \(destination)")
+                
+                if let signal = logic() {
+                    self.signal = signal
+                }
+            } else {// if let number = Int16(token) {
+                // 1: number -> identifier
+                matchDirection()
+                first_identifier = token// nextToken() // Do I need this?
+                destination = nextToken()//first_identifier
+                signal = signal(token)
+                
+                //                print("\(token) -> \(identifier)")
+            }
+        }
     }
     
     convenience init(left: String, gate: Gate, right: String) {
@@ -53,14 +118,12 @@ class Wire: Parser {
     }
     
     func evaluate() -> UInt16? {
-        if let signal = firstSignal() where gate == .NOT {
+        if let signal = firstSignal() where gate == .NOT { // NOT
             return ~signal
-        } else if let first = firstSignal(), second = secondSignal() {
-            return logic(first, right: second)
-        } else if let leftString = first_identifier, rightString = second_identifier {
-            if let left = Wire(expression: leftString).evaluate(), right = Wire(expression: rightString).evaluate() {
-                return logic(left, right: right)
-            }
+        } else if let _ = firstSignal(), _ = secondSignal() { // x GATE y
+            return logic()
+        } else if let first = firstSignal() { // X -> D
+            return first
         }
         return nil
     }
@@ -79,29 +142,40 @@ class Wire: Parser {
         return nil
     }
     
-    func logic(left: UInt16, right: UInt16) -> UInt16 {
-        switch gate! {
-        case .AND:
-            return left & right
-        case .OR:
-            return left | right
-        case .LSHIFT:
-            return left << right
-        case .RSHIFT:
-            return left >> right
-        default:
-            // We shouldn't get here because x NOT y isn't a valid expression.
-            return 0
+    func evaluateSignal() {
+        self.signal = evaluate()
+    }
+    
+    func logic() -> UInt16? {
+        if let gate = gate {
+            if let left = signal(first_identifier), right = signal(second_identifier) {
+                switch gate {
+                case .AND:
+                    return left & right
+                case .OR:
+                    return left | right
+                case .LSHIFT:
+                    return left << right
+                case .RSHIFT:
+                    return left >> right
+                default:
+                    // We shouldn't get here because x NOT y isn't a valid expression.
+                    return nil
+                }
+            } else if let left = signal(first_identifier) where gate == .NOT {
+                return ~left
+            }
         }
+        return nil
+    }
+    
+    func signal(identifier: String?) -> UInt16? {
+        if let id = identifier, signal = UInt16(id) {
+            return signal
+        }
+        return nil
     }
 }
-
-//if let signal = UInt16(identifier) {
-//    return signal
-//}  else if let signal = wires[identifier] {
-//    return UInt16(signal)
-//}
-//return nil
 
 enum Gate: String {
     case NOT
@@ -117,10 +191,6 @@ enum Direction: String {
 
 class Day7: Day {
     
-    var currentToken: String?
-    var tokens: [String] = []
-    var token: String?
-    //    var wires: [Wire] = []
     var wires: [String: UInt16] = [:]
     var incomplete: [String: Wire] = [:]
     
@@ -131,114 +201,66 @@ class Day7: Day {
             parse(instruction)
         }
         
-        print(wires)
-        print(incomplete)
+        for i in incomplete.keys {
+            if let signal = evaluate(i) {
+                wires[i] = signal
+            }
+        }
         
-        evaluate("a")
+        return wires["a"]
+    }
+
+    override func part2() -> Any {
+        let instructions = input()?.componentsSeparatedByCharactersInSet(.newlineCharacterSet()) ?? []
         
-        return 0
+        for instruction in instructions {
+            parse(instruction)
+        }
+        
+        incomplete["b"] = Wire(expression: "3176 -> b")
+        
+        for i in incomplete.keys {
+            if let signal = evaluate(i) {
+                wires[i] = signal
+            }
+        }
+        
+        return wires["a"]
     }
     
     override func input() -> String? {
         return try? String(contentsOfFile: "/Users/Johnny/Desktop/AdventOfCode/AdventOfCode/Inputs/\(self.dynamicType)-Input")
     }
     
-    func evaluate(identifier: String) -> Int16 {
-        
-        return 0
-    }
-    
-    func parse(instruction: String) {
-        parseTokens(instruction)
-        token = nextToken()
-        
-        // Instruction Types
-        // 1: number -> identifier
-        // 2: identifier_1/number GATE identifier_2/number -> identifier_3
-        // 3: NOT identifier_1 -> identifier_2
-        
-        if let token = token {
-            if Gate(rawValue: token) == .NOT {
-                // 3: NOT identifier_1 -> identifier_2
-                let identifier = nextToken()
-                matchDirection()
-                let destination = nextToken()
+    func evaluate(id: String?) -> UInt16? {
+        if let id = id, wire = incomplete[id] {
+            if wire.signal == nil {
                 
-//                print("\(token) \(identifier) -> \(destination)")
-                
-                if let signal = signal(identifier) {
-                    wires[destination] = ~signal
-//                    print("\(wires[destination])")
-                } else {
-//                    incomplete[destination] = "\(Gate.NOT) \(identifier)"
-                    incomplete[destination] = Wire(gate: .NOT, identifier: identifier)
+                if let first = evaluate(wire.first_identifier) {
+                    wire.first_identifier = String(first)
                 }
-            } else if tryMatchGate() {
-                // 2: identifier_1/number GATE identifier_2/number -> identifier_3
-                let gate = Gate(rawValue: nextToken())!
-                let identifier_2 = nextToken()
-                matchDirection()
-                let destination = nextToken()
                 
-//                print("\(token) \(gate) \(identifier_2) -> \(destination)")
-                
-                if let _ = signal(token), _ = signal(identifier_2) {
-                    wires[destination] = execute(token, gate: gate, rightString: identifier_2)
-                } else {
-                    incomplete[destination] = Wire(left: token, gate: gate, right: identifier_2)
+                if let second = evaluate(wire.second_identifier) {
+                    wire.second_identifier = String(second)
                 }
-            } else {
-                // 1: number -> identifier
-                matchDirection()
-                let identifier = nextToken()
-                
-                wires[identifier] = signal(token)
-                
-//                print("\(token) -> \(identifier)")
+
+                wire.evaluateSignal()
             }
-        }
-    }
-    
-    func parseTokens(input: String) {
-        tokens = input.componentsSeparatedByCharactersInSet(.whitespaceCharacterSet())
-    }
-    
-    func nextToken() -> String {
-        guard tokens.count > 0 else {
-            return ""
-        }
-        return tokens.removeFirst()
-    }
-    
-    func tryMatchGate() -> Bool {
-        return (Gate(rawValue: tokens.first ?? "") != nil)
-    }
-    
-    func matchDirection() {
-        guard nextToken() == Direction.Connection.rawValue else {
-            print("Error: Could not match direction.")
-            return
-        }
-    }
-    
-    func execute(leftString: String, gate: Gate, rightString: String) -> UInt16? {
-        if let left = signal(leftString), right = signal(rightString) {
-            switch gate {
-            case .AND:
-                return left & right
-            case .OR:
-                return left | right
-            case .LSHIFT:
-                return left << right
-            case .RSHIFT:
-                return left >> right
-            default:
-                // We shouldn't get here because x NOT y isn't a valid expression.
-                return nil
+            
+            if let signal = wire.signal {
+                return signal
             }
         }
         return nil
     }
+    
+    func parse(instruction: String) {
+        let wire = Wire(expression: instruction)
+        if let destination = wire.destination {
+            incomplete[destination] = wire
+        }
+    }
+
     
     func signal(identifier: String) -> UInt16? {
         if let signal = UInt16(identifier) {
@@ -253,54 +275,3 @@ class Day7: Day {
         return (wires[identifier] != nil)
     }
 }
-
-//func parse(instruction: String) {
-//    parseTokens(instruction)
-//    token = nextToken()
-//    
-//    // Instruction Types
-//    // 1: number -> identifier
-//    // 2: identifier_1/number GATE identifier_2/number -> identifier_3
-//    // 3: NOT identifier_1 -> identifier_2
-//    
-//    if let token = token {
-//        if Gate(rawValue: token) == .NOT {
-//            // 3: NOT identifier_1 -> identifier_2
-//            let identifier = nextToken()
-//            matchDirection()
-//            let destination = nextToken()
-//            
-//            //                print("\(token) \(identifier) -> \(destination)")
-//            
-//            if let signal = signal(identifier) {
-//                wires[destination] = ~signal
-//                //                    print("\(wires[destination])")
-//            } else {
-//                //                    incomplete[destination] = "\(Gate.NOT) \(identifier)"
-//                incomplete[destination] = Wire(gate: .NOT, identifier: identifier)
-//            }
-//        } else if tryMatchGate() {
-//            // 2: identifier_1/number GATE identifier_2/number -> identifier_3
-//            let gate = Gate(rawValue: nextToken())!
-//            let identifier_2 = nextToken()
-//            matchDirection()
-//            let destination = nextToken()
-//            
-//            //                print("\(token) \(gate) \(identifier_2) -> \(destination)")
-//            
-//            if let _ = signal(token), _ = signal(identifier_2) {
-//                wires[destination] = execute(token, gate: gate, rightString: identifier_2)
-//            } else {
-//                incomplete[destination] = Wire(left: token, gate: gate, right: identifier_2)
-//            }
-//        } else {
-//            // 1: number -> identifier
-//            matchDirection()
-//            let identifier = nextToken()
-//            
-//            wires[identifier] = signal(token)
-//            
-//            //                print("\(token) -> \(identifier)")
-//        }
-//    }
-//}
